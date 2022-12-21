@@ -1,0 +1,13 @@
+const Router = require('express')
+const router = Router()
+const postController = require('../controllers/postController')
+
+
+router.get('/all/', postController.get)
+router.get('/',postController.getById)
+router.get('/user/', postController.getByUserId)
+router.post('/',postController.create)
+router.put('/:id',postController.updateById)
+router.delete('/:id', postController.deleteById)
+
+module.exports = router
