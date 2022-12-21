@@ -4,7 +4,7 @@ const {Comment} = require('../models/models')
 class CommentController {
     async getById(req, res, next) {
         try {
-            const id = req.query
+            const {id} = req.query
             if (!id) return next(ApiError.badRequest('"id" must be not null'))
             const comment = await Comment.findByPk(id)
             return res.json(comment)
