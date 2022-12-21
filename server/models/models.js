@@ -5,9 +5,16 @@ const User = sequelize.define('user',
     {
         id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true, allowNull: false},
         username: {type: DataTypes.STRING, unique: true, allowNull: false},
-        registrationType: {type: DataTypes.STRING, allowNull: false},
+        registrationType: {type: DataTypes.STRING, allowNull: false, defaultValue: 1},
         email: {type: DataTypes.STRING, unique: true, allowNull: false},
-        passwordHash: {type: DataTypes.STRING, allowNull: false}
+        passwordHash: {type: DataTypes.STRING(3000), allowNull: false}
+    })
+
+const Auth = sequelize.define('auth',
+    {
+        id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true, allowNull: false},
+        token: {type: DataTypes.STRING(3000), unique: true, allowNull: false},
+        tokenLifeTime: {type: DataTypes.INTEGER, allowNull: false}
     })
 
 const Post = sequelize.define('post',
@@ -61,13 +68,17 @@ Comment.belongsTo(Post)
 Post.hasMany(Image)
 Image.belongsTo(Post)
 
+User.hasOne(Auth)
+Auth.belongsTo(User)
+
 module.exports = {
     User,
     Post,
     Image,
     Subscription,
     Like,
-    Comment
+    Comment,
+    Auth
 }
 
 
