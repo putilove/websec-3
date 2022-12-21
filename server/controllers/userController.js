@@ -3,26 +3,33 @@ const {User} = require('../models/models');
 
 class UserController {
 
-    async signIn(req,res){
-
+    async signIn(req, res) {
+        //TODO
     }
-    async signUp(req,res,next) {
-        try{
-        const {user} = req.body
-        const userRet = await User.create(user)
-        return res.json(userRet)
-        }catch (e){
+
+    async signUp(req, res, next) {
+        //TODO
+        try {
+            const {user} = req.body
+            const userRet = await User.create(user)
+            return res.json(userRet)
+        } catch (e) {
             next(ApiError.badRequest(e.message))
         }
     }
 
-    async checkAuth(req,res){
+    async checkAuth(req, res) {
+        //TODO
         return res.json(await User.findAll())
     }
-    async updateById(req, res){
+
+    async updateById(req, res) {
+        //TODO
 
     }
-    async deleteById(req, res){
+
+    async deleteById(req, res) {
+        //TODO
 
     }
 }

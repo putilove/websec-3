@@ -2,42 +2,66 @@ const ApiError = require('../error/ApiError')
 const {Subscription, Comment, Post} = require('../models/models')
 
 class SubscriptionController {
-    async getById(req, res, next){
-        const inId = req.query.id
-        if(!inId) return next(ApiError.badRequest('"id" must be not null'))
-        const subscription = await Subscription.findByPk(inId)
-        return res.json(subscription)
+    async getById(req, res, next) {
+        try {
+            const {id} = req.query
+            if (!id) return next(ApiError.badRequest('"id" must be not null'))
+            const subscription = await Subscription.findByPk(id)
+            return res.json(subscription)
+        } catch (e) {
+            next(ApiError.internalError(e.message))
+        }
     }
-    async getByUserId(req, res, next){
-        const inUserId = parseInt(req.query.userId)
-        if(!inUserId) return next(ApiError.badRequest('"userId" must be not null'))
-        const subscriptions = await Subscription.findAll({
-            where: { userId: inUserId }
-        })
-        return res.json(subscriptions)
+
+    async getByUserId(req, res, next) {
+        try {
+            const {userId} = req.query
+            if (!userId) return next(ApiError.badRequest('"userId" must be not null'))
+            const subscriptions = await Subscription.findAll({
+                where: {userId}
+            })
+            return res.json(subscriptions)
+        } catch (e) {
+            next(ApiError.internalError(e.message))
+        }
     }
-    async getByOtherUserId(req, res, next){
-        const inOtherUserId = parseInt(req.query.otherUserId)
-        if(!inOtherUserId) return next(ApiError.badRequest('"otherUserId" must be not null'))
-        const subscriptions = await Subscription.findAll({
-            where: { otherUserId: inOtherUserId }
-        })
-        return res.json(subscriptions)
+
+    async getByOtherUserId(req, res, next) {
+        try {
+            const {otherUserId} = req.query
+            if (!otherUserId) return next(ApiError.badRequest('"otherUserId" must be not null'))
+            const subscriptions = await Subscription.findAll({
+                where: {otherUserId}
+            })
+            return res.json(subscriptions)
+        } catch (e) {
+            next(ApiError.internalError(e.message))
+        }
     }
-    async create(req, res, next){
-        const {subscription} = req.body
-        const subscriptionRet = await Post.create(subscription)
-        return res.json(subscriptionRet)
+
+    async create(req, res, next) {
+        try {
+            const {subscription} = req.body
+            const subscriptionRet = await Post.create(subscription)
+            return res.json(subscriptionRet)
+        } catch (e) {
+            next(ApiError.internalError(e.message))
+        }
     }
-    async deleteByUserIdOtherUserId(req, res, next){
-        const inUserId = req.query.id
-        const inOtherUserId = req.query.id
-        if(!inUserId) return next(ApiError.badRequest('"userId" must be not null'))
-        if(!inOtherUserId) return next(ApiError.badRequest('"otherUserId" must be not null'))
-        await Comment.destroy({
-            where: { userId: inUserId, otherUserId: inOtherUserId }
-        })
-        return res.json(inUserId)
+
+    async deleteByUserIdOtherUserId(req, res, next) {
+        try {
+            const {userId} = req.query
+            const {otherUserId} = req.query
+            if (!userId) return next(ApiError.badRequest('"userId" must be not null'))
+            if (!otherUserId) return next(ApiError.badRequest('"otherUserId" must be not null'))
+            await Comment.destroy({
+                where: {userId, otherUserId}
+            })
+            return res.json(userId)
+        } catch (e) {
+            next(ApiError.internalError(e.message))
+        }
     }
 }
 

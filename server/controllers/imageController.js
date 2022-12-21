@@ -4,38 +4,54 @@ const ApiError = require('../error/ApiError')
 const {Image} = require('../models/models')
 
 class ImageController {
-    async getById(req, res, next){
-        const inId = req.query.id
-        if(!inId) return next(ApiError.badRequest('"id" must be not null'))
-        const comment = await Image.findByPk(inId)
-        return res.json(comment)
-    }
-    async getByPostId(req, res, next){
-        const inPostId = parseInt(req.query.postId)
-        if(!inPostId) return next(ApiError.badRequest('"postId" must be not null'))
-        const comments = await Image.findAll({
-            where: { postId: inPostId }
-        })
-        return res.json(comments)
-    }
-    async create(req, res, next){
-        try{
-            let {sequenceNumber, userId, postId} = req.body
-            const {img} = req.files
-            let filename = uuid.v4() + '.jpg'
-            await img.mv(path.resolve(__dirname, '..', 'static', filename))
-            const imageRet = await Image.create({img: filename, sequenceNumber, createdAt: '2022-12-21 15:52:01.115 +00:00', postId, userId})
-            return res.json(imageRet)
-        }catch (e){
-            next(ApiError.badRequest(e.message))
+    async getById(req, res, next) {
+        try {
+            const {id} = req.query
+            if (!id) return next(ApiError.badRequest('"id" must be not null'))
+            const comment = await Image.findByPk(id)
+            return res.json(comment)
+        } catch (e) {
+            next(ApiError.internalError(e.message))
         }
     }
-    async deleteById(req, res, next){
-        const inId = req.query.id
-        if(!inId) return next(ApiError.badRequest('"id" must be not null'))
-        await Image.destroy({
-            where: { id: inId}
-        })
+
+    async getByPostId(req, res, next) {
+        try {
+            const {postId} = req.query
+            if (!postId) return next(ApiError.badRequest('"postId" must be not null'))
+            const comments = await Image.findAll({
+                where: {postId}
+            })
+            return res.json(comments)
+        } catch (e) {
+            next(ApiError.internalError(e.message))
+        }
+    }
+
+    async create(req, res, next) {
+        try {
+            let {sequenceNumber, userId, postId} = req.body
+            const {image} = req.files
+            let img = uuid.v4() + '.jpg'
+            await image.mv(path.resolve(__dirname, '..', 'static', img))
+            const imageRet = await Image.create({img, sequenceNumber, postId, userId})
+            return res.json(imageRet)
+        } catch (e) {
+            next(ApiError.internalError(e.message))
+        }
+    }
+
+    async deleteById(req, res, next) {
+        try {
+            const {id} = req.query
+            if (!id) return next(ApiError.badRequest('"id" must be not null'))
+            await Image.destroy({
+                where: {id}
+            })
+            return res.json(id)
+        } catch (e) {
+            next(ApiError.internalError(e.message))
+        }
     }
 }
 
