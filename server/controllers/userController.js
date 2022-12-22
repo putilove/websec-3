@@ -17,10 +17,10 @@ class UserController {
     async signIn(req, res, next) {
         try {
             const {username, password, email} = req.body
-            if(!password){
+            if (!password) {
                 return next(ApiError.badRequest("Не введён пароль!"))
             }
-            if(!username || !email){
+            if (!username || !email) {
                 return next(ApiError.badRequest("Не введено имя пользователя или email!"))
             }
             const user = await User.findOne(
@@ -33,10 +33,16 @@ class UserController {
                 return next(ApiError.badRequest("Пользователь с такими данными не существует"))
             }
             const isValidPassword = bcrypt.compareSync(password, user.passwordHash)
-            if (!isValidPassword){
+            if (!isValidPassword) {
                 return next(ApiError.badRequest("Не введён пароль!"))
             }
             const token = jwtGen(user.id, user.username, user.email, user.password)
+            await Auth.update({
+                    token
+                },
+                {
+                    where: {userId: user.id}
+                })
             return res.json({token})
         } catch (e) {
             return next(ApiError.badRequest(e.message))
@@ -70,8 +76,10 @@ class UserController {
     }
 
     async checkAuth(req, res) {
-        //TODO
-        return res.json(await User.findAll())
+        const user = req.user
+        const auth = await Auth.findOne({where: {userId: user.id}})
+        const token = auth.token
+        return res.json({token})
     }
 
     async updateById(req, res) {
