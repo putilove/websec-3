@@ -1,7 +1,8 @@
 const uuid = require('uuid')
 const path = require('path')
 const ApiError = require('../error/ApiError')
-const {Image} = require('../models/models')
+const {Image, Post} = require('../models/models')
+const {Op} = require("sequelize");
 
 class ImageController {
     async getById(req, res, next) {
@@ -19,10 +20,23 @@ class ImageController {
         try {
             const {postId} = req.query
             if (!postId) return next(ApiError.badRequest('"postId" must be not null'))
-            const comments = await Image.findAll({
+            const images = await Image.findAll({
                 where: {postId}
             })
-            return res.json(comments)
+            return res.json(images)
+        } catch (e) {
+            next(ApiError.internalError(e.message))
+        }
+    }
+
+    async getImagesByPostIds(req, res, next) {
+        try {
+            const {ids} = req.body
+            if (!ids.length) return next(ApiError.badRequest('"ids" must be not zero length'))
+            let imagePosts = await Image.findAll({
+                where: {postId: {[Op.in]: ids}}
+            })
+            return res.json(imagePosts)
         } catch (e) {
             next(ApiError.internalError(e.message))
         }

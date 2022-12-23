@@ -7,6 +7,6 @@ router.get('/auth', authMiddleware, userController.checkAuth)
 router.post('/signIn', userController.signIn)
 router.post('/signUp', userController.signUp)
 router.put('/:id', userController.updateById)
-router.delete('/:id',userController.deleteById)
+router.post('/signOut',userController.signOut)
 
 module.exports = router

@@ -1,5 +1,6 @@
 const ApiError = require('../error/ApiError')
-const {Post} = require('../models/models')
+const {Post, Image, User, Comment} = require('../models/models')
+const {Op} = require("sequelize");
 
 class PostController {
     async get(req, res, next) {
@@ -22,7 +23,7 @@ class PostController {
         }
     }
 
-    async getByUserId(req, res, next) {
+    async getUserPostsByUserId(req, res, next) {
         try {
             const {userId} = req.query
             if (!userId) return next(ApiError.badRequest('"userId" must be not null'))
@@ -30,6 +31,37 @@ class PostController {
                 where: {userId}
             })
             return res.json(posts)
+        } catch (e) {
+            next(ApiError.internalError(e.message))
+        }
+    }
+
+    async getFollowedUsersPostsByUserId(req, res, next) {
+        try {
+            const {id} = req.query
+            if (!id) return next(ApiError.badRequest('"userId" must be not null'))
+            let posts = await Post.findAll({
+                include: [{
+                    model: Image,
+                    required: true
+                },
+                    {
+                        model: User,
+                        required: true
+                    }
+                    ],
+                where: {userId: {[Op.ne]: id}}
+            })
+            const postIds = posts.map(post => post.id)
+            const comments = await Comment.findAll({
+                include: [{
+                    model: User,
+                    required: true
+                }],
+                where: {[Op.in]: postIds}
+            })
+            let newPosts = posts.map(post => post.comments = comments.filter(comment => comment.postId === post.id)) // TODO
+            return res.json(newPosts)
         } catch (e) {
             next(ApiError.internalError(e.message))
         }

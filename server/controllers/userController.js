@@ -16,18 +16,16 @@ class UserController {
 
     async signIn(req, res, next) {
         try {
-            const {username, password, email} = req.body
+            const {username, password} = req.body
             if (!password) {
                 return next(ApiError.badRequest("Не введён пароль!"))
             }
-            if (!username || !email) {
-                return next(ApiError.badRequest("Не введено имя пользователя или email!"))
+            if (!username) {
+                return next(ApiError.badRequest("Не введено имя пользователя!"))
             }
             const user = await User.findOne(
                 {
-                    where: {
-                        [Op.or]: [{username}, {email}]
-                    }
+                    where: {username}
                 })
             if (!user) {
                 return next(ApiError.badRequest("Пользователь с такими данными не существует"))
@@ -37,12 +35,7 @@ class UserController {
                 return next(ApiError.badRequest("Не введён пароль!"))
             }
             const token = jwtGen(user.id, user.username, user.email, user.password)
-            await Auth.update({
-                    token
-                },
-                {
-                    where: {userId: user.id}
-                })
+            await Auth.create({token, tokenLifeTime: 24, userId: user.id})
             return res.json({token})
         } catch (e) {
             return next(ApiError.badRequest(e.message))
@@ -87,9 +80,10 @@ class UserController {
 
     }
 
-    async deleteById(req, res) {
-        //TODO
-
+    async signOut(req, res) {
+        const {id} = req.body
+        let ret = await Auth.destroy({where: {userId: id}})
+        return res.json(ret)
     }
 }
 

@@ -42,7 +42,7 @@ class SubscriptionController {
     async create(req, res, next) {
         try {
             const {subscription} = req.body
-            const subscriptionRet = await Post.create(subscription)
+            const subscriptionRet = await Subscription.create(subscription)
             return res.json(subscriptionRet)
         } catch (e) {
             next(ApiError.internalError(e.message))

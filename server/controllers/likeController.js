@@ -1,5 +1,6 @@
 const ApiError = require('../error/ApiError')
 const {Like, Post} = require('../models/models')
+const {Op} = require("sequelize");
 
 class LikeController {
     async getById(req, res, next) {
@@ -26,18 +27,34 @@ class LikeController {
         }
     }
 
-    async create(req, res) {
+    async create(req, res, next) {
         try {
-            const {like} = req.body
-            const likeRet = await Like.create(like)
-            const post = await Post.findByPk(likeRet.postId)
-            await Post.update({
-                    likesCount: ++post.likesCount
-                },
-                {
-                    where: {id: likeRet.postId}
+            const {userId, postId} = req.body
+            const mbLike =  await Like.findOne({
+                where: {[Op.and]: [{userId: userId}, {postId: postId}]}
+            })
+            const post = await Post.findByPk(postId)
+            if(mbLike){
+                await Like.destroy({
+                    where: {id: mbLike.id}
                 })
-            return res.json(likeRet)
+                await Post.update({
+                        likesCount: --post.likesCount
+                    },
+                    {
+                        where: {id: postId}
+                    })
+            }
+            else{
+                await Like.create({userId, postId})
+                await Post.update({
+                        likesCount: ++post.likesCount
+                    },
+                    {
+                        where: {id: postId}
+                    })
+            }
+            return res.json(mbLike ? 0 : 1)
         } catch (e) {
             next(ApiError.internalError(e.message))
         }
