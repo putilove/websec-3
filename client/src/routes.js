@@ -31,10 +31,6 @@ export const authRoutes = [
         Component: Post
     },
     {
-        path: FEED_ROUTE,
-        Component: Feed
-    },
-    {
         path: SUBSCRIPTION_ROUTE,
         Component: SubscriptionsPage
     }

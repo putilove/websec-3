@@ -8,8 +8,6 @@ import {Context} from "../index";
 
 const SignInPage = observer(() => {
     const {user} = useContext(Context)
-    const location = useLocation()
-    const history = useHistory()
     const [username, setUserName] = useState('')
     const [password, setPassword] = useState('')
     const click = async () => {
@@ -17,7 +15,7 @@ const SignInPage = observer(() => {
             let data = await signIn(username, password)
             user.setUser(data)
             user.setIsAuth(true)
-            history.push(FEED_ROUTE)
+            document.getElementById("feed").click()
         } catch (e) {
             alert(e.message)
         }

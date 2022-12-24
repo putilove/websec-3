@@ -3,14 +3,16 @@ import {Button, Card, Container, Form, Row} from "react-bootstrap";
 import {NavLink} from "react-router-dom";
 import {SIGNIN_ROUTE} from "../utils/constants";
 import {signUp} from "../http/userAPI";
+import {observer} from "mobx-react-lite";
 
-const SignUpPage = () => {
+const SignUpPage = observer(() => {
     const [username, setUserName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const click = async () => {
         try {
             const response = await signUp(username, email, password)
+            document.getElementById('feed').click()
             console.log(response)
         } catch (e) {
             alert(e.message)
@@ -60,6 +62,6 @@ const SignUpPage = () => {
             </Card>
         </Container>
     );
-};
+});
 
 export default SignUpPage;

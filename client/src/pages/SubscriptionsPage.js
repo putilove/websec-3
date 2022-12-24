@@ -7,5 +7,4 @@ const SubscriptionsPage = () => {
         </div>
     );
 };
-
 export default SubscriptionsPage;
