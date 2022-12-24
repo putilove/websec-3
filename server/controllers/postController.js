@@ -49,18 +49,33 @@ class PostController {
                         model: User,
                         required: true
                     }
-                    ],
+                ],
                 where: {userId: {[Op.ne]: id}}
             })
             const postIds = posts.map(post => post.id)
             const comments = await Comment.findAll({
                 include: [{
+                    attributes: ['username'],
                     model: User,
                     required: true
                 }],
-                where: {[Op.in]: postIds}
+                where: {
+                    postId: {
+                        [Op.in]: postIds
+                    }
+                }
             })
-            let newPosts = posts.map(post => post.comments = comments.filter(comment => comment.postId === post.id)) // TODO
+            let newPosts = posts.map(function (post) {
+                return {
+                    id: post.id,
+                    description: post.description,
+                    createdAt: post.createdAt,
+                    userId: post.userId,
+                    images: post.images,
+                    username: post.user.username,
+                    comments: comments.filter(comment => comment.postId === post.id)
+                }
+            })
             return res.json(newPosts)
         } catch (e) {
             next(ApiError.internalError(e.message))
