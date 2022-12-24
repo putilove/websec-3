@@ -10,7 +10,9 @@ import {Spinner} from "react-bootstrap";
 const App = observer(() => {
     const {user} = useContext(Context)
     const {posts} = useContext(Context)
-    console.log(posts)
+    const {showedUser} = useContext(Context)
+    const {addPost} = useContext(Context)
+    addPost.setImages([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {

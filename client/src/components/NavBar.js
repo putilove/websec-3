@@ -1,14 +1,15 @@
 import React, {useContext} from 'react';
-import {Button, Container, Navbar, Nav} from "react-bootstrap";
+import {Button, Container, Navbar, Nav, FormText} from "react-bootstrap";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
 import 'bootstrap'
 import {signOut} from "../http/userAPI";
-import {useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {SIGNIN_ROUTE} from "../utils/constants";
 
 const NavBar = observer(() => {
     const {user} = useContext(Context)
+    const {showedUser} = useContext(Context)
     const history = useHistory()
     const signOutClick = () => {
         signOut(user.user.id).then((data) => {
@@ -18,24 +19,35 @@ const NavBar = observer(() => {
             history.push(SIGNIN_ROUTE)
         })
     }
-
+    const setShowedUser = (showedUserId, showedUserUsername) => {
+        showedUser.setUserId(showedUserId)
+    }
     return (
         <Navbar bg="dark" variant="dark">
             <Container>
-                <Navbar.Brand href="feed">InstaHlam</Navbar.Brand>
+                <Navbar.Brand id="feed" href="/feed">InstaHlam</Navbar.Brand>
                 {user.isAuth ?
                     <Nav.Item className="ml-auto">
-                        <Navbar.Text>
+
+                        <Navbar.Brand href={`/user/${user.user.id}`}>
                             {user.user.username}
-                        </Navbar.Text>
+                        </Navbar.Brand>
+
                         <Button variant={"outline-light"} className="ms-3" onClick={signOutClick}>
                             Sign Out
                         </Button>
                     </Nav.Item> :
                     <Nav.Item className="ml-auto">
-                        <Navbar.Text>
-                            Sign In or Sign Up
-                        </Navbar.Text>
+                        <Link to='/signIn'>
+                            <Button className="btn-outline-light bg-dark">
+                                Sign In
+                            </Button>
+                        </Link>
+                        <Link to='/signOut'>
+                            <Button className="btn-outline-light bg-dark ms-4">
+                                Sign Out
+                            </Button>
+                        </Link>
                     </Nav.Item>}
             </Container>
         </Navbar>

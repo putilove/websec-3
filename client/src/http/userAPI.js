@@ -24,3 +24,13 @@ export const signOut = async (id) => {
     const {data} = await $authHost.post('api/user/signOut', {id})
     return data
 }
+
+export const getUserById = async (id) => {
+    const {data} = await $authHost.get(`api/user?id=${id}`)
+    return data
+}
+
+export const getAllUsers = async () => {
+    const {data} = await $authHost.get(`api/user/all`)
+    return data
+}
