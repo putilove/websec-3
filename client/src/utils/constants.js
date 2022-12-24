@@ -1,0 +1,6 @@
+export const USER_ROUTE = '/user/:id'
+export const SIGNIN_ROUTE = '/signIn'
+export const SIGNUP_ROUTE = '/signUp'
+export const POST_ROUTE = '/post'
+export const FEED_ROUTE = '/feed'
+export const SUBSCRIPTION_ROUTE = '/subscription'
