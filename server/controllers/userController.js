@@ -42,6 +42,15 @@ class UserController {
         }
     }
 
+    async getAll(req, res, next) {
+        try {
+            const users = await User.findAll()
+            return res.json(users)
+        } catch (e) {
+            return next(ApiError.badRequest(e.message))
+        }
+    }
+
     async signUp(req, res, next) {
         try {
             const {username, password, email} = req.body
@@ -68,22 +77,33 @@ class UserController {
         }
     }
 
-    async checkAuth(req, res) {
+    async checkAuth(req, res, next) {
         const user = req.user
         const auth = await Auth.findOne({where: {userId: user.id}})
-        const token = auth.token
-        return res.json({token})
+        let token = ""
+        if(auth){
+            token = auth.token
+            return res.json({token})
+        }
+        return next(ApiError.noAuthorize("Не авторизован"))
     }
 
-    async updateById(req, res) {
-        //TODO
-
-    }
-
-    async signOut(req, res) {
+    async signOut(req, res, next) {
         const {id} = req.body
         let ret = await Auth.destroy({where: {userId: id}})
         return res.json(ret)
+    }
+
+    async getById(req, res, next) {
+        try{
+            const {id} = req.query
+            if (!id) return next(ApiError.badRequest('"id" must be not null'))
+            let ret = await User.findByPk(id)
+            return res.json(ret)
+        } catch (e) {
+            return next(ApiError.internalError(e.message))
+        }
+
     }
 }
 

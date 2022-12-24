@@ -1,5 +1,6 @@
 const ApiError = require('../error/ApiError')
-const {Subscription, Comment, Post} = require('../models/models')
+const {Subscription, Comment, Post, Like} = require('../models/models')
+const {Op} = require("sequelize");
 
 class SubscriptionController {
     async getById(req, res, next) {
@@ -17,10 +18,10 @@ class SubscriptionController {
         try {
             const {userId} = req.query
             if (!userId) return next(ApiError.badRequest('"userId" must be not null'))
-            const subscriptions = await Subscription.findAll({
+            const subscriptions = await Subscription.findAndCountAll({
                 where: {userId}
             })
-            return res.json(subscriptions)
+            return res.json(subscriptions.count)
         } catch (e) {
             next(ApiError.internalError(e.message))
         }
@@ -30,10 +31,10 @@ class SubscriptionController {
         try {
             const {otherUserId} = req.query
             if (!otherUserId) return next(ApiError.badRequest('"otherUserId" must be not null'))
-            const subscriptions = await Subscription.findAll({
+            const subscriptions = await Subscription.findAndCountAll({
                 where: {otherUserId}
             })
-            return res.json(subscriptions)
+            return res.json(subscriptions.count)
         } catch (e) {
             next(ApiError.internalError(e.message))
         }
@@ -41,9 +42,20 @@ class SubscriptionController {
 
     async create(req, res, next) {
         try {
-            const {subscription} = req.body
-            const subscriptionRet = await Subscription.create(subscription)
-            return res.json(subscriptionRet)
+            const {id} = req.body
+            const {otherId} = req.body
+            const mbSub =  await Subscription.findOne({
+                where: {[Op.and]: [{userId: id}, {otherUserId: otherId}]}
+            })
+            if(mbSub){
+                await Subscription.destroy({
+                    where: {id: mbSub.id}
+                })
+            }
+            else {
+                await Subscription.create({userId: id, otherUserId: otherId})
+            }
+            return res.json(mbSub ? 0 : 1)
         } catch (e) {
             next(ApiError.internalError(e.message))
         }

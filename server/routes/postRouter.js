@@ -5,10 +5,10 @@ const postController = require('../controllers/postController')
 
 router.get('/all/', postController.get)
 router.get('/',postController.getById)
-router.get('/user/', postController.getUserPostsByUserId)
+router.get('/user', postController.getUserPostsByUserId)
 router.get('/followed', postController.getFollowedUsersPostsByUserId)
 router.post('/',postController.create)
 router.put('/:id',postController.updateById)
-router.delete('/:id', postController.deleteById)
+router.delete('/', postController.deleteById)
 
 module.exports = router
