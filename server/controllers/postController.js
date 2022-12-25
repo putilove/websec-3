@@ -126,7 +126,10 @@ class PostController {
     async create(req, res, next) {
         try {
             const {description, userId} = req.body
-            const {images} = req.files
+            let {images} = req.files
+            if(!Array.isArray(images)){
+                images = [images]
+            }
             const imagePaths = images.map(image =>
                 image.name.endsWith('.jpg') ?
                     uuid.v4() + '.jpg' :
