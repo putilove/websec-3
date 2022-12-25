@@ -43,9 +43,9 @@ const NavBar = observer(() => {
                                 Sign In
                             </Button>
                         </Link>
-                        <Link to='/signOut'>
+                        <Link to='/signUp'>
                             <Button className="btn-outline-light bg-dark ms-4">
-                                Sign Out
+                                Sign Up
                             </Button>
                         </Link>
                     </Nav.Item>}

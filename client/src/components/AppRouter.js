@@ -2,7 +2,7 @@ import React from 'react';
 import {useContext} from 'react';
 import {Route, Redirect, Switch} from "react-router-dom";
 import {authRoutes, publicRoutes} from "../routes";
-import {FEED_ROUTE} from "../utils/constants";
+import {FEED_ROUTE, SIGNIN_ROUTE} from "../utils/constants";
 import {Context} from "../index";
 
 const AppRouter = () => {
@@ -16,7 +16,7 @@ const AppRouter = () => {
             {publicRoutes.map(({path, Component}) =>
                 <Route key={path} path={path} component={Component} exact/>
             )}
-            <Redirect to={FEED_ROUTE}/>
+            <Redirect to={SIGNIN_ROUTE}/>
         </Switch>
     );
 };
