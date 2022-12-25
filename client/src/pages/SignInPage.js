@@ -20,6 +20,9 @@ const SignInPage = observer(() => {
             alert(e.message)
         }
     }
+    if(user.isAuth){
+        document.getElementById('feed').click()
+    }
     return (
         <Container
             className="d-flex justify-content-center align-items-center"
