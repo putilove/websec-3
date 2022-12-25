@@ -11,9 +11,8 @@ const SignUpPage = observer(() => {
     const [password, setPassword] = useState('')
     const click = async () => {
         try {
-            const response = await signUp(username, email, password)
+            await signUp(username, email, password)
             document.getElementById('feed').click()
-            console.log(response)
         } catch (e) {
             alert(e.message)
         }

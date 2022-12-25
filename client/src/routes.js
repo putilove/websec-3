@@ -1,9 +1,7 @@
 import Feed from "./pages/Feed";
 import UserPage from "./pages/UserPage";
 import SignInPage from "./pages/SignInPage";
-import Post from "./pages/Post"
-import {FEED_ROUTE, POST_ROUTE, SIGNIN_ROUTE, SIGNUP_ROUTE, SUBSCRIPTION_ROUTE, USER_ROUTE} from "./utils/constants";
-import SubscriptionsPage from "./pages/SubscriptionsPage";
+import {FEED_ROUTE, SIGNIN_ROUTE, SIGNUP_ROUTE, USER_ROUTE} from "./utils/constants";
 import SignUpPage from "./pages/SignUpPage";
 
 export const publicRoutes = [
@@ -25,13 +23,5 @@ export const authRoutes = [
     {
         path: USER_ROUTE,
         Component: UserPage
-    },
-    {
-        path: POST_ROUTE,
-        Component: Post
-    },
-    {
-        path: SUBSCRIPTION_ROUTE,
-        Component: SubscriptionsPage
     }
 ]

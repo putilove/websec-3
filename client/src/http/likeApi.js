@@ -1,6 +1,4 @@
-import {$authHost, $host} from "./index";
-import jwt_decode from 'jwt-decode'
-import {getUserPosts} from "./postApi";
+import {$authHost} from "./index";
 
 
 export const like = async (userId, postId) => {

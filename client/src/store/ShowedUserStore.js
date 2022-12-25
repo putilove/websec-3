@@ -2,7 +2,6 @@ import {makeAutoObservable} from "mobx";
 
 export default class ShowedUserStore {
     constructor() {
-        console.log(`----------------------------------${window.location.search.split("=")[1]}`)
         this._userId = parseInt(window.location.search.split("=")[1])
         this._username = ''
         this._subs = 0
