@@ -7,7 +7,7 @@ import {getFollowedUsersPosts} from "../http/postApi";
 import {like} from "../http/likeApi";
 import {createComment, deleteComment} from "../http/commentApi";
 import {getAllUsers} from "../http/userAPI";
-import {useHistory, useParams} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 
 
 const Feed = observer(() => {
@@ -18,21 +18,15 @@ const Feed = observer(() => {
     useEffect(() => {
         getFollowedUsersPosts(user.user.id)
             .then((data) => {
-                console.log(`followeduserposts`)
-                console.log(data)
                 posts.setPosts(data)
             })
         getAllUsers().then((data) => setUsers(data))
-        console.log(users)
     }, [posts, user.user.id])
     const setUnSetLike = async (userId, postId) => {
-        console.log(userId, postId)
         try {
             await like(userId, postId)
             getFollowedUsersPosts(user.user.id)
                 .then((data) => {
-                    console.log(`followedposts`)
-                    console.log(data)
                     posts.setPosts(data)
                 })
         } catch (e) {
@@ -44,8 +38,6 @@ const Feed = observer(() => {
             await createComment(postId, userId, text)
             getFollowedUsersPosts(user.user.id)
                 .then((data) => {
-                    console.log(`followedposts`)
-                    console.log(data)
                     posts.setPosts(data)
                 })
         } catch (e) {
@@ -57,8 +49,6 @@ const Feed = observer(() => {
             await deleteComment(id)
             getFollowedUsersPosts(user.user.id)
                 .then((data) => {
-                    console.log(`followedposts`)
-                    console.log(data)
                     posts.setPosts(data)
                 })
         } catch (e) {
@@ -68,7 +58,6 @@ const Feed = observer(() => {
     const openUserPage = () => {
         let optionId = document.getElementById("usernameInput").value
         let user = users.filter(usr => usr.username === optionId)[0]
-        console.log(users)
         history.push(`/user/${user.id}`)
     }
     return (
@@ -112,7 +101,7 @@ const Feed = observer(() => {
                         <Row xs={2} className="d-flex justify-content-between align-items-center ms-2 me-2 mt-2">
                             <Button
                                 style={{fontSize: 17, width: 90}}
-                                onClick={e => setUnSetLike(post.userId, post.id)}
+                                onClick={() => setUnSetLike(post.userId, post.id)}
                             >
                                 ❤ {post.likesCount}
                             </Button>
@@ -138,7 +127,7 @@ const Feed = observer(() => {
                                             <Button
                                                 className="align-items-center justify-content-center p-0 pb-3 pt-0"
                                                 style={{width: 20, height: 20}}
-                                                onClick={e => delComment(comment.id)}
+                                                onClick={() => delComment(comment.id)}
                                             >
                                                 x
                                             </Button> :
@@ -155,7 +144,7 @@ const Feed = observer(() => {
                                 />
                             </Form>
                             <Button
-                                onClick={e =>
+                                onClick={() =>
                                     sendComment(
                                         post.id,
                                         user.user.id,

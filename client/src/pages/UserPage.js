@@ -21,12 +21,9 @@ const UserPage = observer(() => {
         getUserById(showedUser.userId).then((data) => {
             showedUser.setUsername(data.username)
         })
-        console.log(showedUser.userId)
         getUserPosts(showedUser.userId)
             .then((data) => {
-                console.log(`userpostsbef`)
                 showedUser.setPosts(data)
-                console.log(showedUser.posts)
             });
         getCountFollowers(showedUser.userId).then((data) => {
             showedUser.setFols(data)
@@ -36,14 +33,11 @@ const UserPage = observer(() => {
         })
     }, [])
     const setUnSetLike = async (userId, postId) => {
-        console.log(userId, postId)
         try {
             await like(userId, postId)
             getUserPosts(showedUser.userId)
                 .then((data) => {
-                    console.log(`userpoststhen`)
                     showedUser.setPosts(data)
-                    console.log(showedUser.posts)
                 })
         } catch (e) {
             alert(e.message)
@@ -54,9 +48,7 @@ const UserPage = observer(() => {
             await follow(id, otherId)
             getCountFollowers(showedUser.userId)
                 .then((data) => {
-                    console.log(`userpoststhen`)
                     showedUser.setFols(data)
-                    console.log(showedUser.posts)
                 })
         } catch (e) {
             alert(e.message)
@@ -67,8 +59,6 @@ const UserPage = observer(() => {
             await createComment(postId, userId, text)
             getUserPosts(showedUser.userId)
                 .then((data) => {
-                    console.log(`followedposts`)
-                    console.log(data)
                     showedUser.setPosts(data)
                 })
         } catch (e) {
@@ -80,8 +70,6 @@ const UserPage = observer(() => {
             await deleteComment(id)
             getUserPosts(showedUser.userId)
                 .then((data) => {
-                    console.log(`followedposts`)
-                    console.log(data)
                     showedUser.setPosts(data)
                 })
         } catch (e) {
@@ -93,8 +81,6 @@ const UserPage = observer(() => {
             await deletePost(id)
             getUserPosts(showedUser.userId)
                 .then((data) => {
-                    console.log(`followedposts`)
-                    console.log(data)
                     showedUser.setPosts(data)
                 })
         } catch (e) {
@@ -123,7 +109,7 @@ const UserPage = observer(() => {
                 "" :
                 <Row xs={2}
                      className="d-flex flex-row justify-content-center align-items-center pb-3 mt-3 mb-2 border-bottom border-dark">
-                    <Button onClick={e => followUnFollow(user.user.id, showedUser.userId)}>
+                    <Button onClick={() => followUnFollow(user.user.id, showedUser.userId)}>
                         Follow/UnFollow
                     </Button>
                 </Row>}
@@ -138,7 +124,7 @@ const UserPage = observer(() => {
                                 <Button
                                     className="mb-2"
                                     style={{width: "fit-content", height: "fit-content"}}
-                                    onClick={e => delPost(post.id)}
+                                    onClick={() => delPost(post.id)}
                                 >
                                     x
                                 </Button> :
@@ -158,7 +144,7 @@ const UserPage = observer(() => {
                         <Row xs={2} className="d-flex justify-content-between align-items-center ms-2 me-2 mt-2">
                             <Button
                                 style={{fontSize: 17, width: 90}}
-                                onClick={e => setUnSetLike(post.userId, post.id)}
+                                onClick={() => setUnSetLike(post.userId, post.id)}
                             >
                                 ❤ {post.likesCount}
                             </Button>
@@ -186,7 +172,7 @@ const UserPage = observer(() => {
                                             <Button
                                                 className="align-items-center justify-content-center p-0 pb-3 pt-0"
                                                 style={{width: 20, height: 20}}
-                                                onClick={e => delComment(comment.id)}
+                                                onClick={() => delComment(comment.id)}
                                             >
                                                 x
                                             </Button> :
@@ -203,7 +189,7 @@ const UserPage = observer(() => {
                                 />
                             </Form>
                             <Button
-                                onClick={e =>
+                                onClick={() =>
                                     sendComment(
                                         post.id,
                                         user.user.id,
@@ -219,8 +205,6 @@ const UserPage = observer(() => {
                 setCreatePostVisible(false);
                 getUserPosts(showedUser.userId)
                     .then((data) => {
-                        console.log(`followedposts`)
-                        console.log(data)
                         showedUser.setPosts(data)
                     })
             }

@@ -1,9 +1,4 @@
 import {makeAutoObservable} from "mobx";
-import {getFollowedUsersPosts} from "../http/postApi";
-import {useContext} from "react";
-import {Context} from "../index";
-import {$authHost} from "../http";
-import jwt_decode from "jwt-decode";
 
 export default class FollowUsersPostsStore {
     constructor() {

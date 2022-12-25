@@ -32,14 +32,17 @@ const CreatePost = observer(({show, onHide}) => {
 
     const addNewPost = async () => {
         if(addPost.description && addPost.images.length > 0 && addPost.userId) {
-            console.log(addPost.images)
             const formData = new FormData()
             images.forEach(image => formData.append('images', image))
             formData.append('description', addPost.description)
             formData.append('userId', addPost.userId)
-            console.log('------------------------')
-            console.log(formData.getAll('images'))
-            createPost(formData).then(() => onHide())
+            createPost(formData).then(() => {
+                addPost.setUserId(0)
+                addPost.setDescription('')
+                addPost.setImages([])
+                setImages([])
+                onHide()
+            })
         }
         else {
             alert("Not full data of new post")
@@ -77,7 +80,7 @@ const CreatePost = observer(({show, onHide}) => {
                                 <Form.Text className="mt-1 mb-2">{image.name}</Form.Text>
                                 <Button
                                     variant={"outline-danger"}
-                                    onClick={e => removeImage(image.name)}
+                                    onClick={() => removeImage(image.name)}
                                 >
                                     Delete
                                 </Button>

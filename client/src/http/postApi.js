@@ -1,5 +1,4 @@
-import {$authHost, $host} from "./index";
-import jwt_decode from 'jwt-decode'
+import {$authHost} from "./index";
 
 
 export const getFollowedUsersPosts = async (id) => {

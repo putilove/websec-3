@@ -1,4 +1,4 @@
-import {$authHost, $host} from "./index";
+import {$authHost} from "./index";
 
 
 export const getCountFollowers = async (id) => {
@@ -13,4 +13,5 @@ export const getCountSubscriptions = async (id) => {
 
 export const follow = async (id, otherId) => {
     const {data} = await $authHost.post(`api/subscription`, {id, otherId})
+    return data
 }
